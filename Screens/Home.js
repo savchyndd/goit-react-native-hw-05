@@ -1,25 +1,25 @@
-import { View, Text, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Ionicons } from '@expo/vector-icons';
-
-import PostScreen from '../MainPages/PostsScreen';
-import CreatePostsScreen from '../MainPages/CreatePostsScreen';
-import ProfileScreen from '../MainPages/ProfileScreen';
-
-import SvgArrowLeft from '../../assets/svg/SvgArrowLeft';
-import SvgLogOut from '../../assets/svg/SvgLogOut';
-
-import SvgGrid from '../../assets/svg/SvgGrid';
-import SvgPlus from '../../assets/svg/SvgPlus';
-import SvgUser from '../../assets/svg/SvgUser';
 import { TouchableOpacity } from 'react-native';
+import { StyleSheet } from 'react-native';
+
+import PostScreen from './MainPages/PostsScreen';
+import CreatePostsScreen from './MainPages/CreatePostsScreen';
+import ProfileScreen from './MainPages/ProfileScreen';
+
+import SvgArrowLeft from '../assets/svg/SvgArrowLeft';
+import SvgLogOut from '../assets/svg/SvgLogOut';
+
+import SvgGrid from '../assets/svg/SvgGrid';
+import SvgPlus from '../assets/svg/SvgPlus';
+import SvgUser from '../assets/svg/SvgUser';
+import SvgTrash from '../assets/svg/SvgTrash';
 
 const ButtomTabs = createBottomTabNavigator();
 
 const Home = () => {
   return (
     <ButtomTabs.Navigator
-      screenOptions={() => ({
+      screenOptions={{
         tabBarStyle: {
           height: 64,
           paddingTop: 10,
@@ -29,11 +29,9 @@ const Home = () => {
           alignContent: 'center',
           justifyContent: 'center',
         },
-      })}
-      tabBarOptions={{
-        showLabel: false,
-        activeTintColor: '#ff6c00',
-        inactiveTintColor: '#212121',
+        tabBarShowLabel: false,
+        tabBarActiveTintColor: '#ff6c00',
+        tabBarInactiveTintColor: '#212121',
       }}
     >
       <ButtomTabs.Screen
@@ -50,7 +48,7 @@ const Home = () => {
             />
           ),
           tabBarButton: props => <TouchableOpacity {...props} style={styles.btnTab} />,
-          tabBarIcon: ({ color }) => {
+          tabBarIcon: ({ selected, color }) => {
             return <SvgGrid stroke={color} />;
           },
         })}
@@ -58,12 +56,13 @@ const Home = () => {
       <ButtomTabs.Screen
         name="CreatePosts"
         component={CreatePostsScreen}
-        options={({ navigation, route }) => ({
+        options={({ navigation }) => ({
+          tabBarStyle: { display: 'none' },
           ...createPostsOptions,
           headerLeft: () => (
             <SvgArrowLeft
               onPress={() => {
-                navigation.navigate('Posts');
+                navigation.goBack();
               }}
               title="Return back"
               color="#fff"
@@ -75,12 +74,13 @@ const Home = () => {
               {...props}
               style={{
                 ...styles.btnTab,
-                backgroundColor: '#ff6c00',
+                backgroundColor: props.accessibilityState.selected ? '#f6f6f6' : '#ff6c00',
+                width: props.accessibilityState.selected ? 70 : 40,
               }}
             />
           ),
-          tabBarIcon: () => {
-            return <SvgPlus fill={'#ffffff'} />;
+          tabBarIcon: ({ focused }) => {
+            return focused ? <SvgTrash stroke={'#dbdbdb'} /> : <SvgPlus fill={'#ffffff'} />;
           },
         })}
       />
@@ -89,6 +89,7 @@ const Home = () => {
         component={ProfileScreen}
         options={({ navigation, route }) => ({
           ...createPostsOptions,
+          headerShown: false,
           headerLeft: () => (
             <SvgArrowLeft
               onPress={() => navigation.navigate('Posts')}

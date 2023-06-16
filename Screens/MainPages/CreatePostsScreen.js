@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+
 import * as DocumentPicker from 'expo-document-picker';
 import { Dimensions, Keyboard, KeyboardAvoidingView, StyleSheet } from 'react-native';
 
@@ -10,10 +12,10 @@ import {
   Text,
   View,
 } from 'react-native';
+
 import SvgTrash from '../../assets/svg/SvgTrash';
 import SvgLocation from '../../assets/svg/SvgLocation';
 import SvgLoadPost from '../../assets/svg/SvgLoadPost';
-import { useNavigation } from '@react-navigation/native';
 
 const CreatePostsScreen = () => {
   const navigation = useNavigation();
@@ -51,6 +53,7 @@ const CreatePostsScreen = () => {
 
     setPostImg(PostImg);
   };
+
   const handleFocus = (currentFocusInput = '') => {
     setIsShowKeyboard(true);
     setCurrentFocused(currentFocusInput);
@@ -59,6 +62,10 @@ const CreatePostsScreen = () => {
     setIsShowKeyboard(false);
     setCurrentFocused('');
     Keyboard.dismiss();
+  };
+  const handleGoBack = () => {
+    clearForm();
+    navigation.goBack();
   };
   return (
     <TouchableWithoutFeedback onPress={handleKeyboardHide}>
@@ -141,6 +148,10 @@ const CreatePostsScreen = () => {
             Опубліковати
           </Text>
         </TouchableOpacity>
+
+        <TouchableOpacity style={styles.btnTrash} onPress={handleGoBack}>
+          <SvgTrash stroke={'#dbdbdb'} />
+        </TouchableOpacity>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -176,7 +187,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
 
     backgroundColor: '#F6F6F6',
-    border: ' 1px solid #E8E8E8',
+    border: '1px solid #E8E8E8',
     borderRadius: 8,
   },
   loadBtn: {
@@ -262,5 +273,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
 
     color: '#bdbdbd',
+  },
+  btnTrash: {
+    alignSelf: 'center',
+    alignItems: 'center',
+
+    width: 70,
+    height: 40,
+
+    paddingVertical: 8,
+    paddingHorizontal: 8,
+
+    backgroundColor: '#f6f6f6',
+    borderRadius: 20,
+    // backgroundColor: props.accessibilityState.selected ? '#f6f6f6' : '#ff6c00',
   },
 });
