@@ -1,29 +1,74 @@
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { FlatList, Image, StyleSheet, Text, TextInput } from 'react-native';
 import { View } from 'react-native';
 import SvgArrowLeft from '../../assets/svg/SvgArrowLeft';
 import { useState } from 'react';
+import CommentItem from '../../components/CommentItem/CommentItem';
+import { Keyboard } from 'react-native';
 
-const CommentsScreen = () => {
-  const [comment, setComment] = useState('');
+const CommentsScreen = ({ postImg }) => {
+  const [commentText, setCommentText] = useState('');
+  const [comments, setComment] = useState([
+    {
+      autorAvatar: '',
+      comment: 'Comment 1sknnn',
+      date: '09 червня, 2020 | 08:40',
+    },
+    {
+      autorAvatar: '',
+      comment: 'Comment 2sknnn',
+      date: '09 червня, 2020 | 08:40',
+    },
+    {
+      autorAvatar: '',
+      comment: 'Comment 3sknnn',
+      date: '09 червня, 2020 | 08:40',
+    },
+  ]);
+
+  const handleAddComment = () => {
+    const data = {
+      autorAvatar: '',
+      comment: commentText,
+      date: '09 червня, 2020 | 08:40',
+    };
+
+    setComment(prev => [...prev, data]);
+    handleKeyboardHide();
+    setCommentText('');
+  };
+
+  const handleKeyboardHide = () => {
+    Keyboard.dismiss();
+  };
+
   return (
-    <View style={styles.container}>
-      <Image style={styles.postImg} />
-      {/* <FlatList /> */}
-      <View style={styles.inputCommentWrapper}>
-        <TextInput
-          style={styles.commentInput}
-          placeholder="Коментувати..."
-          placeholderTextColor=""
-          autoComplete="off"
-          value={comment}
-          onChangeText={setComment}
+    <TouchableWithoutFeedback onPress={handleKeyboardHide}>
+      <View style={styles.container}>
+        <Image style={styles.postImg} source={{ uri: postImg }} />
+        <FlatList
+          style={styles.commentList}
+          data={comments}
+          renderItem={({ item }) => (
+            <CommentItem comment={item.comment} date={item.date} autorAvatar={item.autorAvatar} />
+          )}
+          keyExtractor={(item, idx) => idx.toString()}
         />
-        <TouchableOpacity style={styles.commentBtn}>
-          <SvgArrowLeft />
-        </TouchableOpacity>
+        <View style={styles.inputCommentWrapper}>
+          <TextInput
+            style={styles.commentInput}
+            placeholder="Коментувати..."
+            placeholderTextColor=""
+            autoComplete="off"
+            value={commentText}
+            onChangeText={setCommentText}
+          />
+          <TouchableOpacity style={styles.commentBtn} onPress={handleAddComment}>
+            <SvgArrowLeft style={styles.svgArrow} stroke="#ffffff" />
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -47,16 +92,45 @@ const styles = StyleSheet.create({
 
     borderRadius: 8,
   },
+  commentList: {
+    // borderWidth: 1,
+    // borderColor: '#f6f6f6',
+    // borderRadius: 14,
+
+    maxHeight: 322,
+    marginBottom: 32,
+  },
   inputCommentWrapper: {},
-  commentBtn: {
+  commentInput: {
+    position: 'relative',
     width: '100%',
     height: 50,
+
     padding: 16,
 
     backgroundColor: '#f6f6f6',
 
     borderWidth: 1,
     borderColor: '#e8e8e8',
-    borderRadius: 50,
+    borderRadius: 100,
+  },
+  commentBtn: {
+    position: 'absolute',
+    right: 8,
+    top: 7,
+
+    paddingHorizontal: 6,
+    paddingVertical: 6,
+
+    backgroundColor: '#ff600c',
+
+    borderRadius: 100,
+  },
+
+  svgArrow: {
+    height: 10,
+    width: 10,
+
+    transform: [{ rotate: '90deg' }],
   },
 });

@@ -31,7 +31,7 @@ const PostScreen = ({ route }) => {
             postName={item.postName}
             postImg={item.postImg}
             postAddress={item.postAddress}
-            // postLocation={item.postLocation}
+            postLocation={item.postLocation}
           />
         )}
         keyExtractor={(item, idx) => idx.toString()}
