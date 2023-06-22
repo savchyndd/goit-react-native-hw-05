@@ -1,8 +1,19 @@
-import { Image } from 'react-native';
+import { FlatList, Image } from 'react-native';
 import { Dimensions, Keyboard, KeyboardAvoidingView, StyleSheet } from 'react-native';
 import { Text, View } from 'react-native';
 
-const PostScreen = () => {
+import { useEffect, useState } from 'react';
+import PostsItem from '../../components/PostsItem/PostsItem';
+
+const PostScreen = ({ route }) => {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    if (!route.params) return;
+
+    setPosts(prev => [...prev, route.params]);
+  }, [route.params]);
+
   return (
     <View style={styles.container}>
       <View style={styles.avatarWrapper}>
@@ -12,6 +23,19 @@ const PostScreen = () => {
           <Text style={styles.avatarEmail}>email@example.com</Text>
         </View>
       </View>
+      <FlatList
+        style={styles.postsWrapper}
+        data={posts}
+        renderItem={({ item }) => (
+          <PostsItem
+            postName={item.postName}
+            postImg={item.postImg}
+            postAddress={item.postAddress}
+            // postLocation={item.postLocation}
+          />
+        )}
+        keyExtractor={(item, idx) => idx.toString()}
+      />
       <View style={styles.navTabs}></View>
     </View>
   );
@@ -24,13 +48,14 @@ const styles = StyleSheet.create({
     flex: 1,
 
     paddingHorizontal: 16,
-    paddingVertical: 32,
+    paddingTop: 32,
 
     backgroundColor: '#fff',
   },
   avatarWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 32,
   },
   avatarImg: {
     width: 60,
