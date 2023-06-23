@@ -28,13 +28,13 @@
 - [Макет компонента `MapScreen`](<https://www.figma.com/file/YqWLNarVE4x1zkXa6PYJfi/Homework-(Copy)-(Copy)?node-id=43-54&t=58UisgPOnMIySl1m-0>)
 
 #### Результат
+![Screenshot_1687519074](https://github.com/savchyndd/goit-react-native-hw-05/assets/96209694/085b96b7-029a-4938-bd3c-a17c357a64a8)
+
 
 <div style="display: flex; flex-direction: row; flex-wrap:wrap; gap:20px">
-<img src=""  width="200" height="380">
-<img src=""  width="200" height="380">
-<img src=""  width="200" height="380">
-<img src=""  width="200" height="380">
-<img src=""  width="200" height="380">
-<img src=""  width="200" height="380">
-<img src=""  width="200" height="380">
+<img src="https://github.com/savchyndd/goit-react-native-hw-05/assets/96209694/607724ce-e063-4099-ba78-8e61a59e98a5"  width="200" height="380">
+<img src="https://github.com/savchyndd/goit-react-native-hw-05/assets/96209694/ea33b746-b9de-430a-a0c6-b1d25f248270"  width="200" height="380">
+<img src="https://github.com/savchyndd/goit-react-native-hw-05/assets/96209694/864287b1-116f-4e4d-a210-ebf4588fdea0"  width="200" height="380">
+<img src="https://github.com/savchyndd/goit-react-native-hw-05/assets/96209694/085b96b7-029a-4938-bd3c-a17c357a64a8"  width="200" height="380">
+
 </div>
