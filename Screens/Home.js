@@ -1,6 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { TouchableOpacity } from 'react-native';
-import { StyleSheet } from 'react-native';
+import { TouchableOpacity, StyleSheet } from 'react-native';
 
 import PostScreen from './MainPages/PostsScreen';
 import CreatePostsScreen from './MainPages/CreatePostsScreen';
@@ -19,6 +18,7 @@ const ButtomTabs = createBottomTabNavigator();
 const Home = () => {
   return (
     <ButtomTabs.Navigator
+      id="home"
       screenOptions={{
         tabBarStyle: {
           height: 64,

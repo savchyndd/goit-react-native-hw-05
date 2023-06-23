@@ -1,87 +1,86 @@
-import { FlatList, Image } from 'react-native';
-import { Dimensions, Keyboard, KeyboardAvoidingView, StyleSheet } from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
 import { Text, View } from 'react-native';
+import DefaultPostsScreen from '../PostsPageScreens/DefaultPostsScreen';
+import CommentsScreen from '../PostsPageScreens/CommentsScreen';
+import MapScreen from '../PostsPageScreens/MapScreen';
+import { StyleSheet } from 'react-native';
+import SvgArrowLeft from '../../assets/svg/SvgArrowLeft';
 
-import { useEffect, useState } from 'react';
-import PostsItem from '../../components/PostsItem/PostsItem';
+const NestedScreen = createStackNavigator();
 
-const PostScreen = ({ route }) => {
-  const [posts, setPosts] = useState([]);
-
-  useEffect(() => {
-    if (!route.params) return;
-
-    setPosts(prev => [...prev, route.params]);
-  }, [route.params]);
-
+const PostsScreen = ({ navigation }) => {
   return (
-    <View style={styles.container}>
-      <View style={styles.avatarWrapper}>
-        <Image style={styles.avatarImg} />
-        <View>
-          <Text style={styles.avatarName}>Natali Romanova</Text>
-          <Text style={styles.avatarEmail}>email@example.com</Text>
-        </View>
-      </View>
-      <FlatList
-        style={styles.postsWrapper}
-        data={posts}
-        renderItem={({ item }) => (
-          <PostsItem
-            postName={item.postName}
-            postImg={item.postImg}
-            postAddress={item.postAddress}
-            postLocation={item.postLocation}
-          />
-        )}
-        keyExtractor={(item, idx) => idx.toString()}
+    <NestedScreen.Navigator initialRouteName="DefaultPosts" screenOptions={{ headerShown: false }}>
+      <NestedScreen.Screen name="DefaultPosts" component={DefaultPostsScreen} />
+      <NestedScreen.Screen
+        name="Comments"
+        component={CommentsScreen}
+        options={{
+          ...screenOptions,
+          title: 'Коментарі',
+          headerLeft: () => (
+            <SvgArrowLeft
+              onPress={() => navigation.goBack()}
+              title="Return back"
+              color="#fff"
+              style={styles.arrowLeft}
+            />
+          ),
+        }}
       />
-      <View style={styles.navTabs}></View>
-    </View>
+      <NestedScreen.Screen
+        name="Map"
+        component={MapScreen}
+        options={{
+          ...screenOptions,
+          title: 'Карта',
+          headerLeft: () => (
+            <SvgArrowLeft
+              onPress={() => navigation.goBack()}
+              title="Return back"
+              color="#fff"
+              style={{
+                ...styles.arrowLeft,
+                marginRight: 90,
+              }}
+            />
+          ),
+        }}
+      />
+    </NestedScreen.Navigator>
   );
 };
 
-export default PostScreen;
+export default PostsScreen;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
-    paddingHorizontal: 16,
-    paddingTop: 32,
-
     backgroundColor: '#fff',
   },
-  avatarWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 32,
-  },
-  avatarImg: {
-    width: 60,
-    height: 60,
-
-    marginRight: 8,
-
-    backgroundColor: '#f6f6f6',
-    borderRadius: 16,
-  },
-  avatarName: {
-    fontFamily: 'Roboto',
-    fontStyle: 'normal',
-    fontWeight: 700,
-    fontSize: 13,
-    lineHeight: 15,
-
-    color: '#212121',
-  },
-  avatarEmail: {
-    fontFamily: 'Roboto',
-    fontStyle: 'normal',
-    fontWeight: 400,
-    fontSize: 11,
-    lineHeight: 13,
-
-    color: 'rgba(33, 33, 33, 0.8)',
+  arrowLeft: {
+    marginLeft: 16,
+    marginRight: 76,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
   },
 });
+
+const screenOptions = {
+  headerShown: true,
+  headerStyle: {
+    borderBottomWidth: 0.5,
+    borderBottomColor: 'rgba(0, 0, 0, 0.3)',
+    boxShadow: '0px 0.5px 0px rgba(0, 0, 0, 0.3)',
+  },
+  headerTintColor: '#212121',
+  headerTitleStyle: {
+    fontFamily: 'Roboto',
+    fontStyle: 'normal',
+    fontWeight: 'bold',
+    fontSize: 17,
+    lineHeight: 22,
+
+    textAlign: 'center',
+  },
+};

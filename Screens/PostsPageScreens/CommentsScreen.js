@@ -2,11 +2,14 @@ import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { FlatList, Image, StyleSheet, Text, TextInput } from 'react-native';
 import { View } from 'react-native';
 import SvgArrowLeft from '../../assets/svg/SvgArrowLeft';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CommentItem from '../../components/CommentItem/CommentItem';
 import { Keyboard } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 
-const CommentsScreen = ({ postImg }) => {
+const CommentsScreen = ({ navigation, postImg }) => {
+  const isFocused = useIsFocused();
+
   const [commentText, setCommentText] = useState('');
   const [comments, setComment] = useState([
     {
@@ -26,7 +29,17 @@ const CommentsScreen = ({ postImg }) => {
     },
   ]);
 
+  useEffect(() => {
+    if (isFocused) {
+      navigation?.getParent('home')?.setOptions({
+        tabBarStyle: { display: 'none' },
+        headerShown: false,
+      });
+    }
+  }, []);
+
   const handleAddComment = () => {
+    if (!commentText.trim()) return console.warn('Будь ласка напишіть коментар');
     const data = {
       autorAvatar: '',
       comment: commentText,
@@ -58,7 +71,7 @@ const CommentsScreen = ({ postImg }) => {
           <TextInput
             style={styles.commentInput}
             placeholder="Коментувати..."
-            placeholderTextColor=""
+            placeholderTextColor="#bdbdbd"
             autoComplete="off"
             value={commentText}
             onChangeText={setCommentText}
@@ -86,7 +99,7 @@ const styles = StyleSheet.create({
   postImg: {
     height: 240,
     maxWidth: 343,
-    marginBottom: 32,
+    marginBottom: 28,
 
     backgroundColor: '#f6f6f6',
 
@@ -97,8 +110,8 @@ const styles = StyleSheet.create({
     // borderColor: '#f6f6f6',
     // borderRadius: 14,
 
-    maxHeight: 322,
-    marginBottom: 32,
+    maxHeight: 312,
+    marginBottom: 28,
   },
   inputCommentWrapper: {},
   commentInput: {

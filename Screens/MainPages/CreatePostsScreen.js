@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 
 import { Camera } from 'expo-camera';
 import * as MediaLibrary from 'expo-media-library';
@@ -17,11 +17,12 @@ import SvgLoadPost from '../../assets/svg/SvgLoadPost';
 
 const CreatePostsScreen = () => {
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
 
   const [hasPermission, setHasPermission] = useState(null);
   const [cameraRef, setCameraRef] = useState(null);
 
-  const [postImg, setPostImg] = useState(null);
+  const [postImg, setPostImg] = useState('');
   const [postName, setPostName] = useState('');
   const [postAddress, setPostAddress] = useState('');
   const [postLocation, setPostLocation] = useState(null);
@@ -30,6 +31,9 @@ const CreatePostsScreen = () => {
   const [currentFocused, setCurrentFocused] = useState('');
 
   useEffect(() => {
+    setPostImg('');
+    setPostLocation(null);
+
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       await MediaLibrary.requestPermissionsAsync();
@@ -41,7 +45,6 @@ const CreatePostsScreen = () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         console.log('Permission to access location was denied');
-        return;
       }
     })();
   }, []);
@@ -76,7 +79,7 @@ const CreatePostsScreen = () => {
     console.log({ postImg, postName, postAddress, postLocation });
 
     handleKeyboardHide();
-    navigation.navigate('Posts', {
+    navigation.navigate('DefaultPosts', {
       postImg,
       postName: postName.trim(),
       postAddress: postAddress.trim(),
@@ -96,19 +99,19 @@ const CreatePostsScreen = () => {
       }
     }
 
-    if (!cameraRef && postImg) {
-      try {
-        const avatarImg = await DocumentPicker.getDocumentAsync({
-          type: 'image/*',
-        });
+    // if (!cameraRef && postImg) {
+    //   try {
+    //     const avatarImg = await DocumentPicker.getDocumentAsync({
+    //       type: 'image/*',
+    //     });
 
-        if (avatarImg.type === 'cancel') return setPostImg('');
+    //     if (avatarImg.type === 'cancel') return setPostImg('');
 
-        setPostImg(avatarImg);
-      } catch (error) {
-        console.log('Error > ', error.message);
-      }
-    }
+    //     setPostImg(avatarImg);
+    //   } catch (error) {
+    //     console.log('Error > ', error.message);
+    //   }
+    // }
     addImageLocation();
   };
 
@@ -130,9 +133,8 @@ const CreatePostsScreen = () => {
     return <View />;
   }
   if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
+    return <Text> No access to camera</Text>;
   }
-
   return (
     <TouchableWithoutFeedback onPress={handleKeyboardHide}>
       <View
@@ -157,20 +159,28 @@ const CreatePostsScreen = () => {
                 </TouchableOpacity>
               </>
             ) : (
-              <Camera style={styles.camera} type={Camera.Constants.Type.back} ref={setCameraRef}>
-                <TouchableOpacity
-                  style={{
-                    ...styles.loadBtn,
-                    backgroundColor: postImg ? 'rgba(255, 255, 255, 0.3)' : '#ffffff',
-                  }}
-                  onPress={onLoadPostImg}
+              isFocused && (
+                <Camera
+                  style={styles.camera}
+                  ratio="1:1"
+                  zoom={0}
+                  type={Camera.Constants.Type.back}
+                  ref={setCameraRef}
                 >
-                  <SvgLoadPost
-                    style={styles.loadBtnContent}
-                    fillColor={postImg ? '#ffffff' : '#bdbdbd'}
-                  />
-                </TouchableOpacity>
-              </Camera>
+                  <TouchableOpacity
+                    style={{
+                      ...styles.loadBtn,
+                      backgroundColor: postImg ? 'rgba(255, 255, 255, 0.3)' : '#ffffff',
+                    }}
+                    onPress={onLoadPostImg}
+                  >
+                    <SvgLoadPost
+                      style={styles.loadBtnContent}
+                      fillColor={postImg ? '#ffffff' : '#bdbdbd'}
+                    />
+                  </TouchableOpacity>
+                </Camera>
+              )
             )}
           </View>
           <Text style={styles.loadWrapperText}>
