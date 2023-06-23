@@ -12,8 +12,8 @@ const DefaultPostsScreen = ({ route }) => {
       postImg:
         'file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540anonymous%252Fgoit-react-native-hw-05-dbed3e8b-5429-4e6e-a6ba-fefe43283569/Camera/1609f830-6073-4560-8596-6f26f450b3a3.jpg',
       postName: 'олл',
-      postAddress: 'Alberique',
-      postLocation: { latitude: 39.117873, longitude: -0.5242658 },
+      postAddress: 'Ucraine',
+      postLocation: { latitude: 48.383022, longitude: 31.1828699 },
     },
   ]);
 

@@ -1,4 +1,4 @@
-import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import { KeyboardAvoidingView, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
 import { FlatList, Image, StyleSheet, Text, TextInput } from 'react-native';
 import { View } from 'react-native';
 import SvgArrowLeft from '../../assets/svg/SvgArrowLeft';
@@ -7,7 +7,7 @@ import CommentItem from '../../components/CommentItem/CommentItem';
 import { Keyboard } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 
-const CommentsScreen = ({ navigation, postImg }) => {
+const CommentsScreen = ({ navigation, route: { params } }) => {
   const isFocused = useIsFocused();
 
   const [commentText, setCommentText] = useState('');
@@ -58,7 +58,7 @@ const CommentsScreen = ({ navigation, postImg }) => {
   return (
     <TouchableWithoutFeedback onPress={handleKeyboardHide}>
       <View style={styles.container}>
-        <Image style={styles.postImg} source={{ uri: postImg }} />
+        <Image style={styles.postImg} source={{ uri: params.postImg }} />
         <FlatList
           style={styles.commentList}
           data={comments}
@@ -67,19 +67,24 @@ const CommentsScreen = ({ navigation, postImg }) => {
           )}
           keyExtractor={(item, idx) => idx.toString()}
         />
-        <View style={styles.inputCommentWrapper}>
-          <TextInput
-            style={styles.commentInput}
-            placeholder="Коментувати..."
-            placeholderTextColor="#bdbdbd"
-            autoComplete="off"
-            value={commentText}
-            onChangeText={setCommentText}
-          />
-          <TouchableOpacity style={styles.commentBtn} onPress={handleAddComment}>
-            <SvgArrowLeft style={styles.svgArrow} stroke="#ffffff" />
-          </TouchableOpacity>
-        </View>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.keyboardView}
+        >
+          <View style={styles.inputCommentWrapper}>
+            <TextInput
+              style={styles.commentInput}
+              placeholder="Коментувати..."
+              placeholderTextColor="#bdbdbd"
+              autoComplete="off"
+              value={commentText}
+              onChangeText={setCommentText}
+            />
+            <TouchableOpacity style={styles.commentBtn} onPress={handleAddComment}>
+              <SvgArrowLeft style={styles.svgArrow} stroke="#ffffff" />
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -98,7 +103,7 @@ const styles = StyleSheet.create({
   },
   postImg: {
     height: 240,
-    maxWidth: 343,
+    width: '100%',
     marginBottom: 28,
 
     backgroundColor: '#f6f6f6',
